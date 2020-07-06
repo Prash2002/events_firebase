@@ -34,7 +34,6 @@ class _EventState extends State<Event> {
     endsBefore.documents.forEach(
       (element) {
         endArray.add(element.documentID);
-        // print(element.documentID);
       }
     );
     startsAfter.documents.forEach(
@@ -64,28 +63,38 @@ class _EventState extends State<Event> {
         itemBuilder: (BuildContext context, index){
           print(events[index]);
           return ListTile(
-            title: Text(events[index]['name']),
-            subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'Start Date: ',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+            contentPadding:  EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+            title:  Text(events[index]['name']),
+            
+            subtitle: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top:8.0),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'Start Date: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Text(events[index]['startDate'].toDate().toString()),
+                      ],
                     ),
-                    Text(events[index]['startDate'].toDate().toString().split(' ')[0]),
-                  ],
-                ),
-                
-                Row(
-                  children: <Widget>[
-                    Text('End Date: ',style: TextStyle(fontWeight: FontWeight.w500),),
-                    Text(events[index]['endDate'].toDate().toString().split(' ')[0]),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  
+                  Padding(
+                    padding: const EdgeInsets.only(top:8.0),
+                    child: Row(
+                      children: <Widget>[
+                        Text('End Date: ',style: TextStyle(fontWeight: FontWeight.w500),),
+                        Text(events[index]['endDate'].toDate().toString()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            
           );
         },
       )

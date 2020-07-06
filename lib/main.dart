@@ -2,7 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'dart:async';
 
 import 'getevent.dart';
 void main() {
@@ -30,18 +31,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   DateTime selectedDate = DateTime.now();
-  Future<void> datePicker(BuildContext context) async{
-    final DateTime choosen = await showDatePicker(
-      context: context, 
-      initialDate: selectedDate, 
-      firstDate: DateTime(2002,7), 
-      lastDate: DateTime(2100,7));
-      if(choosen!=null && choosen!= selectedDate){
+  datePicker(BuildContext context){
+    DatePicker.showDateTimePicker(
+      context,
+      showTitleActions: true, 
+      minTime: DateTime(2020, 1, 1),
+      maxTime: DateTime(2025, 12, 31),
+      // theme: DatePickerTheme(backgroundColor: Colors.red),
+      onConfirm: (date) {
         setState(() {
-          selectedDate = choosen;
+        selectedDate = date;
         });
-      }
-      print(selectedDate.toLocal().toString().split(' ')[0]);
+      },
+      );
+      print(selectedDate.toLocal().toString());
   }
 
   @override
@@ -55,7 +58,7 @@ class _HomeState extends State<Home> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text("${selectedDate.toLocal()}".split(' ')[0]),
+            Text(selectedDate.toLocal().toString()),
             SizedBox(height: 20.0,),
             RaisedButton(
               onPressed: () => datePicker(context),
