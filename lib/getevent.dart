@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class Event extends StatefulWidget {
   final DateTime choosenDate;
-  // Event(this.choosenDate);
   Event (this.choosenDate );
   @override
   _EventState createState() => _EventState(choosenDate);
@@ -13,62 +12,39 @@ class _EventState extends State<Event> {
   final DateTime choosenDate;
   _EventState(this.choosenDate);
   final eventsRef = Firestore.instance.collection("events");
-  final List endArray = [];
-  final List events = [];
-  String eventName;
-  @override
-  void initState(){
-    super.initState();
-    getEvent(choosenDate);
-  }
-
-  getEvent(DateTime choosenDate) async{
-    final QuerySnapshot endsBefore = await 
-    eventsRef
-    .where('endDate', isGreaterThanOrEqualTo: Timestamp.fromDate(choosenDate))
-    .getDocuments();
-    final QuerySnapshot startsAfter = await 
-    eventsRef
-    .where('startDate', isLessThanOrEqualTo: Timestamp.fromDate(choosenDate))
-    .getDocuments();
-    endsBefore.documents.forEach(
-      (element) {
-        endArray.add(element.documentID);
-      }
-    );
-    startsAfter.documents.forEach(
-      (element) {
-        endArray.forEach((id) {
-          if(id==element.documentID){
-            print(element.documentID);
-            setState((){
-              eventName = element.data['name'];
-            });
-            print(eventName);
-            events.add(element.data);
-          }
-         });
-      }
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Events on ${choosenDate.day}-${choosenDate.month} '),
       ),
-      body: events.length==0? Center(child: Text('No Events available :(')):ListView.builder(
+      body: FutureBuilder<QuerySnapshot>(
+        // gets events before end date
+        future: eventsRef.where('startDate', isLessThanOrEqualTo: Timestamp.fromDate(choosenDate)).getDocuments(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData){
+            return Center(child: CircularProgressIndicator());
+          }
+          List events=[];
+          snapshot.data.documents.forEach((element) { 
+            // to get events before end date
+           if(element.data['endDate'].toDate().isAfter(choosenDate)){
+            events.add(element.data); 
+          } 
+          });
+           if(events.length==0){
+            return Center(child: Text('No Events Available :('));
+          }
+          else
+          return ListView.builder(
         itemCount: events.length,
         itemBuilder: (BuildContext context, index){
-          print(events[index]);
-          return ListTile(
+         return ListTile(
             contentPadding:  EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
             title:  Text(events[index]['name']),
-            
             subtitle: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top:8.0),
@@ -94,10 +70,11 @@ class _EventState extends State<Event> {
                   ),
                 ],
               ),
-            
           );
         },
-      )
+      );
+        },
+      ),
     );
   }
 }

@@ -1,17 +1,12 @@
-// import 'dart:html';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-// import 'dart:async';
-
 import 'getevent.dart';
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,14 +32,12 @@ class _HomeState extends State<Home> {
       showTitleActions: true, 
       minTime: DateTime(2020, 1, 1),
       maxTime: DateTime(2025, 12, 31),
-      // theme: DatePickerTheme(backgroundColor: Colors.red),
       onConfirm: (date) {
         setState(() {
         selectedDate = date;
         });
       },
       );
-      print(selectedDate.toLocal().toString());
   }
 
   @override
@@ -71,7 +64,6 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-     
     );
   }
 }
