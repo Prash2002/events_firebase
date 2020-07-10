@@ -21,18 +21,17 @@ class _EventState extends State<Event> {
       ),
       body: FutureBuilder<QuerySnapshot>(
         // gets events before end date
-        future: eventsRef.where('startDate', isLessThanOrEqualTo: Timestamp.fromDate(choosenDate)).getDocuments(),
+        future: eventsRef.where('eventDates', arrayContains:Timestamp.fromDate(choosenDate)).getDocuments(),
         builder: (context, snapshot){
           if(!snapshot.hasData){
             return Center(child: CircularProgressIndicator());
           }
           List events=[];
           snapshot.data.documents.forEach((element) { 
-            // to get events before end date
-           if(element.data['endDate'].toDate().isAfter(choosenDate)){
-            events.add(element.data); 
-          } 
+            print(element.data);
+            events.add(element.data);
           });
+          print(events);
            if(events.length==0){
             return Center(child: Text('No Events Available :('));
           }
@@ -54,7 +53,7 @@ class _EventState extends State<Event> {
                           'Start Date: ',
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
-                        Text(events[index]['startDate'].toDate().toString()),
+                        Text(events[index]['eventDates'][0].toDate().toString()),
                       ],
                     ),
                   ),
@@ -64,7 +63,7 @@ class _EventState extends State<Event> {
                     child: Row(
                       children: <Widget>[
                         Text('End Date: ',style: TextStyle(fontWeight: FontWeight.w500),),
-                        Text(events[index]['endDate'].toDate().toString()),
+                        Text(events[index]['eventDates'].last.toDate().toString()),
                       ],
                     ),
                   ),
