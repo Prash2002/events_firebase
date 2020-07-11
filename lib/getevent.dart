@@ -28,10 +28,10 @@ class _EventState extends State<Event> {
           }
           List events=[];
           snapshot.data.documents.forEach((element) { 
-            print(element.data);
+            // print(element.data);
             events.add(element.data);
           });
-          print(events);
+          // print(events);
            if(events.length==0){
             return Center(child: Text('No Events Available :('));
           }

@@ -1,3 +1,4 @@
+import 'package:firebasetodo/createevent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'getevent.dart';
@@ -51,6 +52,11 @@ class _HomeState extends State<Home> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            RaisedButton(
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CreateEvent())),
+              child: Text('Create Event'),
+            ),
+            SizedBox(height: 20.0,),
             Text(selectedDate.toLocal().toString()),
             SizedBox(height: 20.0,),
             RaisedButton(
